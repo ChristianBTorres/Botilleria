@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Botillería Don Ibai</title>
+        <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='ico.svg') }}">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+        <link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
+        <style>
+            .bg-primary {
+                background-color: #ffb5c1 !important;
+                color: white;
+            }
+
+            .text-primary {
+                color: #ffb5c1 !important;
+            }
+
+            .btn-primary {
+                background-color: #ffb5c1 !important;
+                border-color: #ffb5c1 !important;
+                color: white !important;
+            }
+
+            .btn-primary:hover {
+                background-color: #ff9bb0 !important;
+                border-color: #ff9bb0 !important;
+                color: white !important;
+            }
+
+            input.form-control:focus,
+            .btn-close:focus {
+                box-shadow: 0 0 0 0.2rem #ff9bb148;
+                /* Cambia el valor RGBA según tu preferencia */
+                border-color: #ff9bb0;
+                /* Cambia el valor RGBA según tu preferencia */
+            }
+        </style>
+    </head>
+
+    <body>
+        <header class="w-100 text-center my-3">
+            <h1 class="text-primary">Botillería Don Ibai</h1>
+        </header>
+
+        <main>
+            <div class="container fs-2">
+                <div class="row">
+                    <div class="col-6">
+                        <a href="{{url_for('products')}}" class="text-decoration-none btn-primary w-100 rounded-2 d-flex justify-content-center align-items-center fw-bold" style="min-height:100px">
+                            <label>Productos</label>
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <a href="{{url_for('suppliers')}}" class="text-decoration-none btn-primary w-100 rounded-2 d-flex justify-content-center align-items-center fw-bold" style="min-height:100px">
+                            <label>Proveedores</label>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="container position-relative mt-5">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </main>
+        <script>
+            const proveedores = []
+            const productos = []
+        </script>
+        {% for proveedor_item in proveedores %}
+        <script>
+            proveedores.push(['{{proveedor_item.nombre}}', '{{proveedor_item.rut}}', '{{proveedor_item.telefono}}', '{{proveedor_item.correo}}', '{{proveedor_item.direccion}}', '{{proveedor_item._id}}'])
+        </script>
+        {% endfor %}
+
+        {% for producto_item in productos %}
+        <script>
+            productos.push(['{{producto_item.nombre}}', '{{producto_item.precio}}', '{{producto_item.stock}}', '{{producto_item.proveedor}}', '{{producto_item._id}}'])
+        </script>
+        {% endfor %}
+
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/gridjs/dist/gridjs.umd.js"></script>
+        <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+        <script>
+            new gridjs.Grid({
+                columns: ["Nombre", "Precio", "Stock", "Proveedor",
+                    {
+                        name: "Acciones",
+                        formatter: (cell) => gridjs.html(`<div class="d-flex justify-content-between"><a class="bi bi-trash3 text-danger" href="/delete/product/${cell}"/><a class="bi bi-pencil text-success" href="/edit/product/${cell}"/></div>`)
+                    },
+                ],
+                data: productos,
+                sort: true,
+                search: true,
+            }).render(document.getElementById("productos"));
+        </script>
+        <script>
+            new gridjs.Grid({
+                columns: ["Nombre", "RUT", "Dirección", "Teléfono", "Correo",
+                    {
+                        name: "Acciones",
+                        formatter: (cell) => gridjs.html(`<div class="d-flex justify-content-between"><a class="bi bi-trash3 text-danger" href="/delete/supplier/${cell}"/><a class="bi bi-pencil text-success" href="/edit/supplier/${cell}"/></div>`)
+                    },
+                ],
+                data: proveedores,
+                sort: true,
+                search: true,
+            }).render(document.getElementById("proveedores"));
+        </script>
+    </body>
+
+</html>

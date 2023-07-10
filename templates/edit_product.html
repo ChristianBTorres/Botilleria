@@ -1,0 +1,36 @@
+{% extends 'producto.html' %}
+
+{% block modal %}
+<div class="modal fade show" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="false" style="display: block;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Editar Producto</h1>
+                <a class="btn-close" aria-label="Close" href="{{ url_for('products') }}"></a>
+            </div>
+            <div class="modal-body">
+                <form action="{{url_for('edit_product', id=producto._id)}}" method="post">
+                    <label>Nombre</label>
+                    <input type="text" name="nombre" class="form-control" value="{{producto.nombre}}">
+                    <label>Precio</label>
+                    <input type="number" name="precio" class="form-control" value="{{producto.precio}}">
+                    <label>Stock</label>
+                    <input type="number" name="stock" class="form-control" value="{{producto.stock}}">
+                    <label>Proveedor</label>
+                    <select class="form-control" name="proveedor">
+                        {% for x in proveedores_list %}
+                        {% if x['_id']|string != producto.proveedor %}
+                        <option value="{{x._id}}">{{x.nombre}}</option>
+                        {% else %}
+                        <option value="{{x._id}}" selected>{{x.nombre}}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+
+                    <button class="btn btn-primary mt-4">Guardar <i class="bi bi-save"></i></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock modal %}
